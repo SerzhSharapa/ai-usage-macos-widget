@@ -99,7 +99,35 @@ owner decision: history and extra provider included deliberately; roadmap orders
 
 ## Traceability
 
-(Filled by roadmap — requirement → phase mapping.)
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| CORE-01 | Phase 2 | Pending |
+| CORE-02 | Phase 4 | Pending |
+| CORE-03 | Phase 2 | Pending |
+| CORE-04 | Phase 4 | Pending |
+| CRED-01 | Phase 3 | Pending |
+| CRED-02 | Phase 3 | Pending |
+| CRED-03 | Phase 3 | Pending |
+| MENU-01 | Phase 4 | Pending |
+| MENU-02 | Phase 4 | Pending |
+| MENU-03 | Phase 3 | Pending |
+| MENU-04 | Phase 4 | Pending |
+| WIDG-01 | Phase 5 | Pending |
+| WIDG-02 | Phase 5 | Pending |
+| WIDG-03 | Phase 5 | Pending |
+| WIDG-04 | Phase 5 | Pending |
+| NOTIF-01 | Phase 6 | Pending |
+| NOTIF-02 | Phase 6 | Pending |
+| FCST-01 | Phase 6 | Pending |
+| HIST-01 | Phase 6 | Pending |
+| PROV-01 | Phase 6 | Pending |
+| PLAT-01 | Phase 1 | Pending |
+| PLAT-02 | Phase 6 | Pending |
+
+Coverage (validated 2026-10-11): **22/22** v1 requirements mapped; no orphans,
+no duplicate phase assignments. All statuses remain Pending until implementation
+and acceptance. Shared-layer behavior is rechecked when later UI consumers are
+connected; each requirement still has exactly one owning phase.
 
 ---
 *Initialized: 2026-10-11*
