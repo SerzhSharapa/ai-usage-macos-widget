@@ -1,0 +1,43 @@
+{
+  "contract": "1.0.0",
+  "flavor": "core",
+  "milestone": null,
+  "phases": [
+    {
+      "number": "1",
+      "name": "Каркас Xcode и личная подпись",
+      "status": "in_progress"
+    },
+    {
+      "number": "2",
+      "name": "UsageCore и контракт снимка",
+      "status": "pending"
+    },
+    {
+      "number": "3",
+      "name": "Учётные данные и настройки",
+      "status": "pending"
+    },
+    {
+      "number": "4",
+      "name": "Строка меню и фоновый опрос",
+      "status": "pending"
+    },
+    {
+      "number": "5",
+      "name": "Виджет Центра уведомлений",
+      "status": "pending"
+    },
+    {
+      "number": "6",
+      "name": "Уведомления, история и завершение v1",
+      "status": "pending"
+    }
+  ],
+  "next": {
+    "command": "/gsd:progress --next",
+    "label": "Advance to the next step",
+    "reason": "Phase 1 of 6 · 0% · executing"
+  },
+  "updated_at": "2026-10-11T21:06:51.969Z"
+}

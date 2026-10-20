@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Фаза 1, план 01-02 (PLAT-01, T-01-01/T-01-02): права app-таргета —
+	     ровно три: песочница, исходящие соединения (пригодится фазе 2), одна App Group.
+	     Изоляция расширения: в Widget/AiUsageWidget.entitlements сетевых прав и
+	     связки ключей нет и не добавляется (Pitfall 5). -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<!-- Единый литерал группы (Pitfall 6, T-01-01): одна и та же строка во всех
+		     четырёх конфигурационных файлах. DEVELOPMENT_TEAM — сборочный параметр,
+		     подставляется при обработке entitlements и Info.plist; сверка
+		     развёрнутого значения с ожидаемой командой — verify-install.sh (01-03). -->
+		<string>$(DEVELOPMENT_TEAM).group.aiusage</string>
+	</array>
+	<!-- Quick 261018-jd8: read-only доступ к ФАЙЛАМ, ЯВНО выбранным владельцем
+	     в NSOpenPanel (импорт auth.json Codex CLI / Kilo). Право только на чтение
+	     пользовательского выбора; каталоги и автоматическое чтение чужих путей
+	     не появляются. Виджет этого права не получает (его набор неизменен). -->
+	<key>com.apple.security.files.user-selected.read-only</key>
+	<true/>
+</dict>
+</plist>

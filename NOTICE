@@ -1,0 +1,20 @@
+ai-usage-macos-widget
+Copyright 2026 SerzhSharapa
+
+Provider adapter logic is translated and adapted from dsh-usage-hq and
+@linxin666/dsh-usage, distributed under the Apache License, Version 2.0.
+Upstream: https://github.com/zhu1090093659/dsh-web
+The translated provider adapters retain Apache-2.0 licensing; see
+ThirdPartyLicenses/Apache-2.0.txt. Other original project code uses LICENSE.
+Changes: Swift translation, native macOS transport and credential handling,
+shared WidgetKit snapshots, strict handling of missing provider values.
+
+Upstream attribution:
+
+dsh-usage-hq
+Copyright 2026 SerzhSharapa
+
+This product is a fork of @linxin666/dsh-usage
+(upstream: https://github.com/zhu1090093659/dsh-web),
+Copyright its author(s), licensed under the Apache License, Version 2.0.
+The upstream LICENSE is reproduced in ThirdPartyLicenses/Apache-2.0.txt.

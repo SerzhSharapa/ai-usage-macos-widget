@@ -1,0 +1,62 @@
+{
+  "quick_id": "261018-jd8",
+  "cycle": 3,
+  "written_at": "2026-10-18T19:30:00Z",
+  "author": "gsd-executor/gsd-code-fixer (Kimi K3 high), без коммитов по запрету владельца",
+  "source_version": 6,
+  "verification": {
+    "swift_test": {"passed": 63, "failed": 0, "note": "56 прежних + 7 новых (конверт 3, вентиль 2, overflow-индикатор 2)"},
+    "xcodebuild_compile_only": {"result": "BUILD SUCCEEDED", "mode": "Debug, CODE_SIGNING_ALLOWED=NO, без установки и без codesign"},
+    "signed_build": "не выполнялась исполнителем — за родителем",
+    "installed_selftest_keychain": "не выполнялся исполнителем — за родителем после подписи v6"
+  },
+  "findings": [
+    {
+      "id": "CR-02",
+      "severity": "high",
+      "status": "addressed",
+      "fix": "Codex: один атомарный Keychain-элемент provider.codex.credentials.v1 с Codable-конвертом {schemaVersion, accessToken, accountId?}; запись — одна операция SecItemUpdate/SecItemAdd; неуспех оставляет прежнюю запись нетронутой и не инвалидирует board; все пути (presence/read/import/disconnect/fetch) используют конверт; token+accountId берутся из одного decode; legacy-пара v3-v5 никогда не читается для опроса (needsReimport + фиксированное UI-сообщение, HTTP по legacy нет); in-memory poison удалён",
+      "files": ["AiUsage/ProviderAccess.swift", "Packages/UsageCore/Sources/UsageCore/CredentialImport.swift", "Packages/UsageCore/Sources/UsageCore/ProviderLifecycle.swift", "AiUsage/AiUsageApp.swift"],
+      "tests": ["envelopeRoundTrip", "envelopeRejects", "failedWriteKeepsOldFacts"],
+      "limitations": "Атомарность записи на уровне SecItem проверяется родителем подписанным --self-test-keychain (парный fixture-конверт включён); unit-тесты не выполняют реальных SecItem-вызовов"
+    },
+    {
+      "id": "PARENT-KEYCHAIN-STORE",
+      "severity": "high (блокер установки v5)",
+      "status": "addressed",
+      "fix": "kSecUseDataProtectionKeychain убран из baseQuery — классический macOS login keychain для собственного сервиса; entitlements НЕ расширялись; старые DP-записи не читаются/не трогаются; KeychainError несёт operation + числовой OSStatus; selftest печатает op/status",
+      "files": ["AiUsage/ProviderAccess.swift"],
+      "tests": ["keychainPresenceMapping (прежний, не изменён)"],
+      "limitations": "Фактический OSStatus classic-записи в signed-контексте измерит родитель; при новом отказе числовой status будет в выводе selftest"
+    },
+    {
+      "id": "WR-04",
+      "severity": "medium",
+      "status": "addressed",
+      "fix": "RefreshGate (UsageCore, чистый): запрос во время прохода коалесцируется в один немедленный повторный проход синхронного while-цикла; без рекурсивного порождения задач; UsageModel.refreshAll использует вентиль",
+      "files": ["Packages/UsageCore/Sources/UsageCore/ProviderLifecycle.swift", "AiUsage/ProviderAccess.swift"],
+      "tests": ["rerunCoalescing", "noDeadCycleWhenNothingToPoll"],
+      "limitations": "Интеграция app-таргета подтверждена компиляцией (app target без unit-бандла); полный app-context прогон — за родителем"
+    },
+    {
+      "id": "WR-03-overflow",
+      "severity": "medium",
+      "status": "addressed",
+      "fix": "small и medium вызывают containsUnknownPercent на ПОЛНОМ row.windows независимо от усечённой сводки; бейдж «неизв.» amber; известный максимум при неполноте secondary (не зелёный); «+N ещё» — честное количество",
+      "files": ["Widget/TestWidget.swift"],
+      "tests": ["overflowHiddenUnknownStillSignalled", "allUnknownWindows"],
+      "limitations": "UI-семантика принята по коду; визуальный рендер — ручная проверка владельцем"
+    },
+    {
+      "id": "WR-05",
+      "severity": "medium",
+      "status": "addressed",
+      "fix": "Контрольное чтение после delete — throwing try (ошибка = FAIL, не nil); добавлен парный fixture atomic-roundtrip JSON-конверта в новом случайном слоте; FAIL выводит op + числовой OSStatus; cleanup try? только над своими fixture-слотами; выход из App.init до модели/сети сохранён",
+      "files": ["AiUsage/ProviderAccess.swift", "AiUsage/AiUsageApp.swift"],
+      "tests": [],
+      "limitations": "Исполнение selftest требует подписанной сборки — за родителем"
+    }
+  ],
+  "versions": {"CFBundleVersion": 6, "targets": ["AiUsage", "AiUsageWidget"], "widget_kind": "AiUsageTestWidget (без изменений)"},
+  "untouched": ["entitlements обоих таргетов", "project.pbxproj", "scripts/", "STATE.md", "ROADMAP.md", "CHECKPOINT.json", "REVIEW.md", "LICENSE/NOTICE", "docs/", "keychain ACL/trust/partition-lists", "реальные credential-файлы и Keychain-записи (не читались)", "сеть (запросов не было)", "git (коммитов/стейджинга нет)"]
+}

@@ -1,0 +1,33 @@
+{
+  "status": "completed_with_source_auth_limitations",
+  "verified_date_utc": "2026-10-18",
+  "owner_consent_at": "2026-10-18T21:07:04Z",
+  "installed_version": "7",
+  "installed_verify": "PASS",
+  "swift_tests": "66/66 PASS, independently repeated by root",
+  "ruby_fixture_tests": "11 runs / 88 assertions PASS, independently repeated by root",
+  "privacy_review": "0 critical / 1 availability warning; DSH-IMPORT-REVIEW.md",
+  "import_process": "bgp_150fabc7700106bDQyBY2cbUv7",
+  "providers": {
+    "codex": {
+      "credential_import": "imported",
+      "usage_request": "failed",
+      "needs_reauthentication": true,
+      "source_access_expired": true,
+      "refresh_copied_or_used": false
+    },
+    "glm-cn": {"credential_import": "imported", "usage_request": "ok", "windows_received": 2},
+    "kimi": {"credential_import": "imported", "usage_request": "ok", "windows_received": 3},
+    "openrouter": {"credential_import": "imported", "usage_request": "ok", "balance_received": true},
+    "deepseek": {"credential_import": "skipped", "reason": "No compatible API-key reference in the inspected DSH store; account-platform/session records are not copied"}
+  },
+  "shared_cache_written": true,
+  "normal_gui_reopened": true,
+  "source_store_written_by_importer": false,
+  "unsupported_credentials_transferred": false,
+  "secrets_exposed_in_tools_or_chat": false,
+  "plaintext_credential_tempfiles_created": false,
+  "private_financial_values_copied_to_repo": false,
+  "cron_cancelled_after_completion": true,
+  "committed": false
+}

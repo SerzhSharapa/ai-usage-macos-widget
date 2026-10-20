@@ -19,3 +19,18 @@ Package.resolved
 # (Package.resolved держим в git для приложений; раскомментировать при необходимости)
 
 # PR / planning артефакты с секретами не храним — .planning/ трекается без секретов
+
+# Личный конфиг ожидаемой команды (TeamID владельца) — в git не попадает (01-03)
+scripts/expected-team.local
+
+# Артефакты сборки SYMROOT="$PWD/build" (01-03)
+/build/
+
+# SwiftPM Xcode build-system cache emitted at invocation cwd (CLT 6.4)
+/.buildSystem_debug
+/.lock
+/CACHEDIR.TAG
+/debug
+/manifest.pif
+/out/
+/workspace-state.json

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Фаза 1, план 01-02: Info.plist app-таргета.
+	     Файл подключён как INFOPLIST_FILE = AiUsage/Info.plist в project.pbxproj
+	     (план 01-01, GENERATE_INFOPLIST_FILE = NO). -->
+	<key>CFBundleName</key>
+	<string>AI Usage Widget</string>
+	<!-- Имя в Finder (D-09): «AI Usage Widget». -->
+	<key>CFBundleDisplayName</key>
+	<string>AI Usage Widget</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>21</string>
+	<!-- Приложение-агент без иконки в Dock (D-05): тестовый пункт в строке меню. -->
+	<key>LSUIElement</key>
+	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.0</string>
+	<!-- Идентификатор App Group для appGroupID(from:) (UsageCore, TestRecord.swift).
+	     Единый литерал всех четырёх конфигурационных файлов (Pitfall 6, T-01-01);
+	     подстановка DEVELOPMENT_TEAM при обработке Info.plist даёт рантайму
+	     полный идентификатор с префиксом команды. -->
+	<key>AppGroupID</key>
+	<string>$(DEVELOPMENT_TEAM).group.aiusage</string>
+</dict>
+</plist>

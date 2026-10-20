@@ -1,0 +1,91 @@
+{
+  "quick": "261018-jd8",
+  "status": "ready_for_parent_sign_and_live_acceptance",
+  "executor_route": "hq-sol-high (caller-declared OpenAI Sol subscription route)",
+  "started_at": "2026-10-18T21:16:56Z",
+  "ready_at": "2026-10-18T21:22:09Z",
+  "bundle_version": 7,
+  "manual_edit_tool": "apply_patch",
+  "files": [
+    "AiUsage/AiUsageApp.swift",
+    "AiUsage/ProviderAccess.swift",
+    "AiUsage/Info.plist",
+    "Widget/Info.plist",
+    "Packages/UsageCore/Sources/UsageCore/CredentialImport.swift",
+    "Packages/UsageCore/Tests/UsageCoreTests/ProviderUsageTests.swift",
+    "scripts/import-dsh-credentials.rb",
+    "scripts/tests/dsh-import-test.rb"
+  ],
+  "checks": [
+    {
+      "command": "/usr/bin/ruby scripts/tests/dsh-import-test.rb",
+      "result": "PASS",
+      "ruby": "2.6.10p210 system Ruby",
+      "tests": 11,
+      "assertions": 88,
+      "failures": 0,
+      "coverage": [
+        "whitelisted direct refs plus expired Codex grant; refresh and foreign records not forwarded",
+        "wrong-typed or conflicting account IDs reject only Codex",
+        "known optional DeepSeek ref only; malformed refs skipped",
+        "safe_load refuses aliases and Ruby object tags; malformed and oversized YAML give generic errors",
+        "fixture inspect stdout/stderr and diagnostic report contain no sentinel/account ID",
+        "actual fake receiver reads private stdin pipe; no fixture credential in child argv or env",
+        "child secret-bearing stderr discarded; arbitrary stdout fields and strings not forwarded",
+        "identity gate precedes stop/send; reopen attempted after failed child",
+        "foreign provider and arbitrary child error rejected; cache failure preserved"
+      ]
+    },
+    {
+      "command": "swift test --package-path Packages/UsageCore",
+      "result": "PASS",
+      "tests": 66,
+      "existing_tests": 63,
+      "new_tests": 3,
+      "coverage_added": [
+        "WR-06: native and dictionary Codex ID wrong types reject whole Codex entry, valid sibling remains",
+        "missing/null account ID accepted as nil",
+        "partial stdin chunks through EOF; 65536 bytes accepted, 65537 rejected"
+      ]
+    },
+    {
+      "command": "xcodebuild -project AiUsage.xcodeproj -scheme AiUsage -configuration Debug -destination 'platform=macOS,arch=arm64' CODE_SIGNING_ALLOWED=NO build",
+      "result": "BUILD SUCCEEDED",
+      "scope": "compile only; no signing, install, application launch or credential access",
+      "diagnostic_note": "Quiet compile attempts emitted an Xcode diagnostic that a SwiftCompile command exited 0 without further output. Explicit non-quiet final invocation completed BUILD SUCCEEDED. Existing NSOpenPanel actor-isolation and traditional-headermap warnings remain outside this change."
+    },
+    {
+      "command": "/usr/bin/ruby -c scripts/import-dsh-credentials.rb && git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "execution_contract": {
+    "helper_command": "/usr/bin/ruby scripts/import-dsh-credentials.rb --import --replace-existing",
+    "inspect_command": "/usr/bin/ruby scripts/import-dsh-credentials.rb --inspect",
+    "default_source": "~/.dsh/.credentials.yaml",
+    "source_writes": false,
+    "refresh_token_forwarding": false,
+    "secret_transport": "in-memory minimal dictionary -> private stdin pipe -> verified fixed installed application",
+    "receiver_gate": "fixed own bundle/executable, verify-install identity/Team/integrity, installed version exactly 7; sanitized subprocess environment",
+    "single_writer": "helper invokes existing stop-installed.sh before receiver, verifies again, reopens own GUI after child even on receive failure",
+    "replacement": "existing connections skipped without explicit --replace-existing; other providers not deleted",
+    "app_mode": "before UI/activate; MainActor Task serviced by main RunLoop; bounded EOF stdin; strict closed provider set; existing atomic Codex envelope path",
+    "network": "one explicit refreshAll in CLI, only existing fixed usage GET adapters; normal reopened GUI retains its usual refresh lifecycle",
+    "stdout": "known provider/import/request statuses, numeric usage/balance/times, fixed error codes, needs_reauth, cache_write_failed; no account ID or credential strings",
+    "expired_codex": "imported without refresh/rotation; usage failure remains visible and does not block other providers"
+  },
+  "not_performed": [
+    "reading real DSH credential source or real provider Keychain slots",
+    "signing, installing, launching actual app, or real credential import",
+    "provider usage requests or model API calls",
+    "DSH/global configuration/entitlement changes",
+    "commits, staging, push, extra agents, planning, or parent-owned state/review/doc edits"
+  ],
+  "parent_acceptance_remaining": [
+    "build/sign/install version 7 and verify installed identity",
+    "actual stdin/MainActor RunLoop termination under signed sandbox",
+    "authorized live classic Keychain import and one-shot usage GET results",
+    "cache_write_failed false and actual widget snapshot/render agreement",
+    "honest expired Codex status without OAuth refresh or source writes"
+  ]
+}

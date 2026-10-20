@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Фаза 1, план 01-02 (PLAT-01, T-01-02): права widget extension —
+	     ровно ДВА: песочница и та же App Group, что у приложения.
+	     Сетевых прав и доступа к связке ключей у расширения НЕТ и не добавляется
+	     (Pitfall 5 — расползание прав): расширение только читает контейнер группы;
+	     негативные codesign-проверки — verify-install.sh (план 01-03).
+	     Ничего кроме двух ключей ниже не добавлять. -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<!-- Единый литерал группы (Pitfall 6, T-01-01): дословно как в
+		     AiUsage/AiUsage.entitlements и ключе AppGroupID обоих Info.plist. -->
+		<string>$(DEVELOPMENT_TEAM).group.aiusage</string>
+	</array>
+</dict>
+</plist>

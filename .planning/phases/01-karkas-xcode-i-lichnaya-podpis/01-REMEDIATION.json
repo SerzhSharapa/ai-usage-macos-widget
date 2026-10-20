@@ -1,0 +1,208 @@
+{
+  "schema": "gsd-code-review.remediation/1",
+  "phase": "01-karkas-xcode-i-lichnaya-podpis",
+  "created": "2026-10-12T00:48:18Z",
+  "attempt": 3,
+  "executor": "gsd-code-fixer (substantive semantic fixes, execute-plan workflow); attempt 3 — quality escalation по раунду-3 review",
+  "executor_model_family": "Kimi (kimi-coding/k3-256k) — эскалация после двух попыток Z.ai GLM по CR-04",
+  "review_reference": ".planning/phases/01-karkas-xcode-i-lichnaya-podpis/01-CODE-REVIEW.md",
+  "machinefindings_reference": ".planning/phases/01-karkas-xcode-i-lichnaya-podpis/machinefindings.json",
+  "independence_note": "Все статусы fixed в этой попытке ПРЕДВАРИТЕЛЬНЫ до независимой проверки Sol (cross-family reviewer). Ни один issue не объявляется закрытым; PLAT-01/01-04/01-05 статусы не меняются. Автор не принимает собственную работу.",
+  "method": "Сначала чёрное воспроизведение контрпримеров раунда-3 на НЕИЗМЕНЁННОМ коде (оба воспроизведены: TERM внешней фикстуре через symlink-каталог MacOS; TERM+KILL историческому PID 999999 исходной cleanup), затем минимальные правки, затем те же пробы на исправленном коде и расширенные self-tests. Существующие сценарии не ослаблялись; новые секции только добавлены.",
+  "hypotheses": [
+    {
+      "id": "H1", "finding": "CR-04",
+      "hypothesis": "Обёртка принимает любой непустой CFBundleExecutable и строит якорь без проверки границы; помощник канонизирует якорь realpath без привязки к бандлу.",
+      "prediction_before": "(a) CFBundleExecutable='../../../../../../Empty Fixture' при живом внешнем процессе — оригинал отправляет ему TERM (wrapper rc=0, фикс exit 143); (b) то же при symlink MacOS/<exe> на внешнюю фикстуру.",
+      "prediction_after": "Оба сценария — wrapper rc=1 FAIL ДО помощника (0 сигналов), фикстуры завершаются сами (exit 0); прямой вызов помощника с внешним якорем/traversal — rc=7 без сигналов.",
+      "verified": true
+    },
+    {
+      "id": "H2", "finding": "WR-01",
+      "hypothesis": "Правило awk '^[[:space:]] → next' глотает границу записи (headers тоже с отступа), хранится только последняя пара Path/SDK; election-состояние header не разбирается.",
+      "prediction_before": "exact(1.0)+stale(2.0) → rc=1 (ложный FAIL); обратный порядок → rc=0 (зависимость от порядка); exact с header '-' → rc=0 (ignored принят).",
+      "prediction_after": "Оба порядка rc=0 (инвариантность); '-'/'='/'?' → rc=1. Маркеры и семантика — man pluginkit.8 (проверено на машине), формат Path/SDK — read-only системный запрос (39/39 полей; -mDvv структурно идентичен -mAvv).",
+      "verified": true
+    },
+    {
+      "id": "H3", "finding": "WR-02",
+      "hypothesis": "Помощник схлопывает ошибку proc_pidpath (EACCES) и исчезновение PID (ESRCH) в один nil→continue, что даёт rc=3 «не запущен» при живой нечитаемой цели.",
+      "prediction_before": "DYLD-interpose, отрицающий proc_pidpath только для собственного живого PID → rc=3, цель жива.",
+      "prediction_after": "rc=2 (отказ инспекции), цель жива, сигнала нет; обёртка на rc=2 — FAIL «замена НЕ разрешена».",
+      "verified": true
+    },
+    {
+      "id": "H4", "finding": "WR-04",
+      "hypothesis": "В 'grep -Eq \"^${team}\\.${GROUP_SUFFIX}$\"' вторая точка suffix'а остаётся regex-wildcard: TESTTEAMID.groupXaiusage проходит и листится чужой каталог.",
+      "prediction_before": "gid=TESTTEAMID.groupXaiusage с реальным каталогом и маркером-ИМЕНЕМ файла FOREIGN_GROUP_FILENAME → rc=0, имя в отчёте.",
+      "prediction_after": "Секция пропущена, имени нет (точное строковое равенство).",
+      "verified": true
+    },
+    {
+      "id": "H5", "finding": "CR-04 (раунд 3)",
+      "hypothesis": "enforceBoundary вычисляет macosCanonical=realpath(root/Contents/MacOS) и сравнивает с ним canonical(parent(exe)): symlink самого каталога MacOS (или промежуточного Contents) наружу пропускается обеими сторонами — граница переопределяется symlink'ом, внешняя цель получает TERM.",
+      "prediction_before": "Неизменённый helper, Boundary.app/Contents/MacOS → symlink на внешний scratch-каталог с собственной пустой фикстурой 'AI Usage Widget': --list rc=0, --stop rc=0, фикстура получает TERM (exit 143).",
+      "prediction_after": "Граница — ЛИТЕРАЛ canonical(root)+'/Contents/MacOS'; требуется realpath(литерал)==литерал, parent(exe)==литералу, resolution файла точное. --list и --stop → rc=7 ДО перечисления процессов, внешняя фикстура жива, ноль сигналов; симметрично для symlink промежуточного Contents.",
+      "verified": true
+    },
+    {
+      "id": "H6", "finding": "WR-06",
+      "hypothesis": "Исходная cleanup self-test'а хранит все PID (включая reaped) до EXIT и шлёт TERM, затем безусловный KILL историческим номерам без проверки владельца/birth/пути.",
+      "prediction_before": "Исходная cleanup-семантика с PIDS_FILE=999999 (несуществующий PID) и stub kill: обе записи SIGNAL_CALL 999999 и SIGNAL_CALL -9 999999 без единого запроса identity.",
+      "prediction_after": "Учёт по identity-снимку (uid + lstart + comm) в момент старта; reaped фикстуры исключаются НЕМЕДЛЕННО; cleanup сигналит только живому экземпляру с подтверждённой identity (повторная сверка перед крайним KILL); исторический PID и живой процесс с изменённой identity получают ноль сигналов.",
+      "verified": true
+    }
+  ],
+  "commits": 0,
+  "staging": false,
+  "production_files_modified": [
+    "scripts/stop-installed.sh",
+    "scripts/verify-install.sh",
+    "scripts/diagnostics.sh",
+    "scripts/procstop/main.swift",
+    "scripts/procstop/self-test.sh"
+  ],
+  "production_files_created": [],
+  "before_probes_on_unchanged_code": [
+    {"name": "CR04_ESCAPE", "result": "wrapper rc=0; внешняя фикстура убита TERM (exit 143) — контрпример review воспроизведён (attempt 2)"},
+    {"name": "CR04_SYMLINK", "result": "wrapper rc=0; внешняя фикстура убита TERM (exit 143) — воспроизведён (attempt 2)"},
+    {"name": "WR02_DENY", "result": "interpose-EACCES на собственном живом PID: helper rc=3 «не запущен», цель жива — воспроизведён (attempt 2)"},
+    {"name": "WR01_EXACT_FIRST_STALE_LAST", "result": "rc=1 (точная запись потеряна) — воспроизведён (attempt 2)"},
+    {"name": "WR01_EXACT_LAST_POSITIVE", "result": "rc=0 — воспроизведена зависимость от порядка (attempt 2)"},
+    {"name": "WR01_IGNORED_REGISTRATION", "result": "rc=0 PASS при header '-' — воспроизведён (attempt 2)"},
+    {"name": "WR04_GROUPX", "result": "rc=0, FOREIGN_GROUP_FILENAME в отчёте — воспроизведён (attempt 2)"},
+    {"name": "CR04_PARENT_SYMLINK_R3", "result": "attempt 3, раунд-3 контрпример на неизменённом helper: Boundary.app/Contents/MacOS → symlink наружу, собственная внешняя фикстура 'AI Usage Widget' — LIST_RC=0, STOP_RC=0, FIXTURE_EXIT=143 (TERM получен внешней целью) — дефект подтверждён"},
+    {"name": "WR06_STALE_CLEANUP_R3", "result": "attempt 3, исходная cleanup-семантика с PIDS_FILE=999999 и stub kill: SIGNAL_CALL 999999 + SIGNAL_CALL -9 999999, ни одного запроса identity — дефект подтверждён"}
+  ],
+  "after_probes_on_fixed_code": [
+    {"name": "CR04_ESCAPE", "result": "wrapper rc=1 FAIL «CFBundleExecutable… не является безопасным именем файла» ДО помощника; фикстура завершилась сама (exit 0) (attempt 2)"},
+    {"name": "CR04_SYMLINK", "result": "wrapper rc=1 FAIL «разрешается за пределами Contents/MacOS» ДО помощника; exit 0 (attempt 2)"},
+    {"name": "CR04_HELPER_EXTERNAL", "result": "прямой вызов помощника с внешним якорем → rc=7 (граница), цель жива (attempt 2)"},
+    {"name": "CR04_HELPER_TRAVERSAL", "result": "traversal в якоре → rc=7 (attempt 2)"},
+    {"name": "CR04_PARENT_SYMLINK_R3", "result": "attempt 3: тот же сценарий на исправленном helper — LIST_RC=7, STOP_RC=7 («Contents/MacOS разрешается в <outside>, а не в <root>/Contents/MacOS — граница переопределена symlink'ом»), внешняя фикстура ЖИВА, ноль сигналов; self-test секция (12)"},
+    {"name": "CR04_CONTENTS_SYMLINK_R3", "result": "attempt 3: symlink промежуточного Contents наружу — --list rc=7 и --stop rc=7, внешняя фикстура жива; self-test секция (13)"},
+    {"name": "WR06_STALE_ZERO_SIGNALS", "result": "attempt 3: настоящие cleanup-функции нового self-test (извлечены из файла), PIDS_FILE=999999 + stub kill — ноль записей SIGNAL_CALL; self-test секция (14a)"},
+    {"name": "WR06_CHANGED_IDENTITY_ZERO_SIGNALS", "result": "attempt 3: живая собственная фикстура с намеренно чужой записью identity (PID, bogus birth/comm) — ноль сигналов, процесс не тронут; self-test секция (14b)"},
+    {"name": "WR02_DENY", "result": "helper rc=2 «инспекция неопределена», цель жива, сигнала нет (attempt 2)"},
+    {"name": "WR01_EXACT_FIRST_STALE_LAST", "result": "rc=0 PASS (инвариантность порядка) (attempt 2)"},
+    {"name": "WR01_EXACT_LAST_POSITIVE", "result": "rc=0 PASS (attempt 2)"},
+    {"name": "WR01_IGNORED_REGISTRATION", "result": "rc=1 FAIL (ignored не принимается) (attempt 2)"},
+    {"name": "WR01_SUPERSEDED_REGISTRATION", "result": "rc=1 FAIL (superseded не принимается) (attempt 2)"},
+    {"name": "WR04_GROUPX", "result": "rc=0, секция пропущена, FOREIGN_GROUP_FILENAME отсутствует (attempt 2)"}
+  ],
+  "findings_fixed": [
+    {
+      "id": "CR-04", "status": "fixed_provisional_until_independent_review",
+      "changes": [
+        "stop-installed.sh (attempt 2): CFBundleExecutable — строго безопасный basename И ровно литерал продукта EXPECT_EXECUTABLE='AI Usage Widget'; codesign --verify --strict --deep целостности старого бандла; каноническая граница ДО помощника",
+        "procstop/main.swift (attempt 2): контракт --stop/--list <bundle-root> <exe> [<timeout>], rc=7 EXIT_BOUNDARY",
+        "procstop/main.swift (attempt 3, раунд 3): корень — неподвижная точка отсчёта. Авторизованный каталог — ЛИТЕРАЛ canonical(root)+'/Contents/MacOS'; требуется realpath(литерал)==литерал (symlink самого MacOS или промежуточного Contents меняет каноническую форму → rc=7 ДО перечисления процессов); canonical(parent(exe)) сравнивается с этим литералом, а НЕ с realpath(root/Contents/MacOS); существующий файл обязан разрешаться точно в литерал+basename"
+      ],
+      "checks": [
+        "ДО (attempt 3): контрпример раунда 3 воспроизведён — symlink-каталог MacOS наружу, LIST_RC=0/STOP_RC=0, внешняя фикстура получила TERM (exit 143)",
+        "ПОСЛЕ (attempt 3): тот же сценарий — rc=7 ×2 с явной причиной, фикстура жива, ноль сигналов; Contents-symlink — rc=7 ×2, цель жива",
+        "нативный self-test procstop 28/28: новые секции (12) MacOS-symlink-каталог и (13) Contents-symlink → rc=7, TERM не отправлялся; секции (1)-(3) границ раунда 2 сохранены",
+        "self-test stop-installed 54/54 (wrapper не менялся в attempt 3): 2c traversal, 2d symlink-побег, 2e sibling-имя — все FAIL до helper_calls=0",
+        "валидный бандл с пробелами в имени продукта («AI Usage Widget.app») проходит: секции (4)-(7) зелёные (TMPDIR на /var/folders — symlink /var→/private/var — канонизация согласована)"
+      ]
+    },
+    {
+      "id": "WR-01", "status": "fixed_provisional_until_independent_review",
+      "changes": [
+        "verify-install.sh [f]: парсер записей вместо «последней пары»: header записи (id(версия) с необязательным election-маркером) сбрасывает состояние, пара Path+SDK коммитится НЕМЕДЛЕННО при получении второго поля (инвариантность к порядку версий и к порядку полей); маркеры по man pluginkit.8 (+ выбран / - игнор / ! отладка / = замещён / ? неизвестно)",
+        "запрос -mDvv вместо -mAvv: -D возвращает ВСЕ eligible-экземпляры (man: без него сокращение до последнего)",
+        "сравнение путей ТОЧНОЕ после канонизации realpath обеих сторон; допустимое состояние регистрации — '+' или отсутствие маркера; '-','=','?','!' и чужой путь — не доказательство (stale-наблюдение)",
+        "разбор полей без IFS-коллапса (пустой маркер в первом TAB-поле иначе съедается read)"
+      ],
+      "checks": [
+        "ДО: exact-first → rc=1, exact-last → rc=0, ignored → rc=0 (все три дефекта воспроизведены)",
+        "ПОСЛЕ: exact-first → rc=0, exact-last → rc=0, ignored/superseded → rc=1",
+        "self-test verify-install 31/31: P6/P7 перестановки, P8 '-' P9 '=' P10 '?', P11 дубликаты версии, P12 symlink-alias пути (канонизация)"
+      ]
+    },
+    {
+      "id": "WR-02", "status": "fixed_provisional_until_independent_review",
+      "changes": [
+        "procstop/main.swift: lookupKernelExecutablePath — три состояния (known/ESRCH gone/EACCES-прочее denied) вместо nil→continue",
+        "классификация denied-PID независимыми источниками ядра: proc_bsdinfo → (a) зомби (pbi_status==SZOMB) — не цель; (b) чужой владелец (pbi_uid/ruid/svuid != euid) — не цель; (c) свой живой процесс: kernel-имя pbi_comm; несовпадение с basename цели исключает процесс; совпадение — неопределённость → rc=2 fail closed; (d) неопределимый владелец → rc=2",
+        "обёртка stop-installed.sh: rc=2 — FAIL «состояние НЕ известно: замена НЕ разрешена» (не «не запущен»)"
+      ],
+      "checks": [
+        "ДО: interpose-EACCES на живом собственном PID → rc=3, цель жива (воспроизведено)",
+        "ПОСЛЕ: rc=2, цель жива, сигнал не отправлялся; нативный self-test (9)",
+        "нативный self-test procstop 28/28 (включая интерпоз только для собственного PID и ENOENT-фикстуру (11))"
+      ]
+    },
+    {
+      "id": "WR-04", "status": "fixed_provisional_until_independent_review",
+      "changes": [
+        "diagnostics.sh: точное строковое равенство [ \"$gid\" = \"$team.$GROUP_SUFFIX\" ] вместо regex (вторая точка suffix'а была wildcard); канонические проверки пути сохранены"
+      ],
+      "checks": [
+        "ДО: gid=TESTTEAMID.groupXaiusage → листинг чужого каталога с FOREIGN_GROUP_FILENAME в отчёте (воспроизведено)",
+        "ПОСЛЕ: секция пропущена, имя не выгружено",
+        "self-test diagnostics 26/26: D8 (groupXaiusage) и D9 (group.aiusagX) с маркерами-ИМЕНАМИ файлов"
+      ]
+    },
+    {
+      "id": "WR-06", "status": "fixed_provisional_until_independent_review",
+      "changes": [
+        "self-test.sh (attempt 3): учёт фикстур по identity-снимку PID+uid+birth(ps lstart)+comm в момент старта (track_fixture); завершённая/reaped фикстура НЕМЕДЛЕННО исключается из набора (untrack_fixture на каждом reap/wait)",
+        "cleanup_tracked_pids: сигнал ТОЛЬКО живому экземпляру с identity, подтверждённой непосредственно перед сигналом (uid+birth+comm); TERM → короткое ожидание со сверкой → KILL только после ПОВТОРНОЙ сверки; исторические номера и чужая identity получают ноль сигналов",
+        "конечноживущие фикстуры дожидаются собственного завершения (wait), blanket KILL удалён; production-контракт помощника (один TERM, таймаут rc=6, без KILL) не изменён"
+      ],
+      "checks": [
+        "ДО: исходная cleanup с PIDS_FILE=999999 и stub kill — SIGNAL_CALL 999999 и SIGNAL_CALL -9 999999 без запросов identity (воспроизведено)",
+        "ПОСЛЕ: настоящие cleanup-функции из файла — исторический PID и живой процесс с чужой identity: ноль записей сигналов, живой процесс не тронут",
+        "self-test секции (14a)/(14b) — детерминированные stub-пробы с перехватом kill (-0-пробы не логируются)"
+      ]
+    }
+  ],
+  "verification_battery": [
+    {"name": "verify-install --self-test", "result": "31/31 PASS (без регрессии; перезапущено в attempt 3)", "exit_code": 0},
+    {"name": "stop-installed --self-test", "result": "54/54 PASS (без регрессии; wrapper в attempt 3 не менялся)", "exit_code": 0},
+    {"name": "diagnostics --self-test", "result": "26/26 PASS (без регрессии; перезапущено в attempt 3)", "exit_code": 0},
+    {"name": "procstop native self-test (scripts/procstop/self-test.sh)", "result": "28/28 PASS (attempt 3: было 19/19; +секции (12) MacOS-symlink-каталог rc=7 ×2 + живая внешняя фикстура + без TERM, (13) Contents-symlink rc=7 ×2, (14a) исторический PID ноль сигналов, (14b) изменённая identity ноль сигналов + процесс жив)", "exit_code": 0},
+    {"name": "preflight-negative harness", "result": "6 прогонов PASS (без регрессии; перезапущено в attempt 3)", "exit_code": 0},
+    {"name": "swift test UsageCore (явный plugin-path CLT)", "result": "23/23 PASS (без регрессии; исходники пакета не менялись; перезапущено в attempt 3)", "exit_code": 0},
+    {"name": "bash -n (procstop/self-test)", "result": "OK (bash 3.2.57 системный)", "exit_code": 0},
+    {"name": "swiftc -typecheck procstop/main.swift (-target arm64-apple-macos15.0, SDK MacOSX27)", "result": "OK", "exit_code": 0},
+    {"name": "swiftc -O -compile procstop (target macos15.0) — внутри self-test и проб", "result": "OK", "exit_code": 0}
+  ],
+  "design_decisions": [
+    "Владельческое ограничение WR-02 (по Fix-указанию review): процесс другого uid не может быть целью; root-запущенный процесс, исполняющий ТОЧНО наш установленный бинарий, классифицируется как чужой — см. residuals.",
+    "pbi_comm как независимый identity: kernel-maintained, ≤15 симв.; «AI Usage Widget» помещается целиком; setprogname-подмена ловится тем же правилом (совпадение имени → rc=2 fail closed).",
+    "CR-04 раунд 3: неподвижный корень — граница строится литеральной конкатенацией от canonical(root), а canonical(root/Contents/MacOS) обязан равняться этому литералу; так symlink-каталог не может переопределить авторизованный каталог. Проверка выполняется ДО перечисления процессов и ДО любого сигнала.",
+    "WR-06: identity тестовой фикстуры — uid + lstart (секундная точность ps) + comm-снимок в момент старта; ps comm отражает argv[0] (проверено машинно: exec -a даёт spoofed comm), поэтому comm берётся как НАБЛЮДАЕМЫЙ снимок, а не как ожидаемое имя файла. KILL в cleanup — только после повторной сверки identity и только не-вышедшему экземпляру.",
+    "Допустимые election-состояния регистрации: '+' и отсутствие маркера; '!'-usages отладчика отвергаются консервативно.",
+    "Один код выхода помощника 7 (граница цели) — задокументирован в stop-installed.sh и main.swift; коды не менялись в attempt 3."
+  ],
+  "assert_changes_note": "Attempt 3: существующие assert'ы не правились и не ослаблялись; добавлены 9 новых (12a/12b ×2 + живость + без TERM, 13 ×2, 14a, 14b ×2). Attempt 2: stop-installed (3) — фрагмент 'отказ инспекции' → 'состояние НЕ известно'; diagnostics D7 — фрагмент под новое сообщение точного равенства.",
+  "previous_attempts_summary": [
+    {
+      "attempt": 1,
+      "outcome": "7 из 11 issues закрыты (CR-01/02/03/05/06, WR-03/05 — confirmed by review round 2); CR-04/WR-01/WR-02/04 — partially_fixed"
+    },
+    {
+      "attempt": 2,
+      "executor_model_family": "Z.ai GLM (glmodingplan/glm-5.3)",
+      "outcome": "по раунду-3 review: WR-01/WR-02/WR-04 resolved (source/fixture/native-fault-probe); CR-04 остался partially_fixed (новый контрпример: symlink КАТАЛОГА MacOS переопределял границу самостоятельного helper, внешняя фикстура получила TERM); добавлен WR-06 (cleanup self-test сигналил историческим PID без проверки identity)"
+    }
+  ],
+  "residuals_and_limits": [
+    "Статусы fixed — ПРЕДВАРИТЕЛЬНЫ до независимого cross-family review (Sol); ни PLAT-01, ни 01-04, ни 01-05 не закрываются.",
+    "Xcode отсутствует: реальная загрузка проекта, сборка/подпись/установка/регистрация/остановка настоящего приложения не проверялись.",
+    "CR-04: не доказан и не заявлен обход end-to-end через wrapper/build.sh реального подписанного продукта; finding — нарушение самостоятельного root/path-контракта helper, которое attempt 3 закрывает на уровне helper и покрывает регресс-тестами (12)/(13).",
+    "WR-02: root-запущенный процесс, исполняющий ТОЧНО наш установленный бинарий, классифицируется как чужой по владельцу (вне threat-model фазы).",
+    "WR-02/CR-04: теоретическая гонка PID re-use между финальной сверкой и kill не устранена атомарно — окно минимально, повторные сигналы не отправляются.",
+    "WR-02: интерпоз-тест DYLD_INSERT_LIBRARIES действует на собственный adhoc-скомпилированный бинарь помощника.",
+    "WR-06: birth из ps lstart имеет секундную точность; совместно с uid и comm-снимком этого достаточно для тестового cleanup (окно — секунды жизни коротких фикстур), но это не pidfd-grade гарантия.",
+    "TOCTOU между codesign --verify и сигналом смягчён повторной сверкой канонического пути экземпляра непосредственно перед TERM.",
+    "Коммиты/staging не выполнялись (явный запрет scope); всё в рабочем дереве. HEAD 7583e3ae4e34c68c2c4b642031a84a069bed5b18 до и после."
+  ],
+  "notes_for_parent": [
+    "Attempt 3 (эскалация Kimi): изменены ТОЛЬКО scripts/procstop/main.swift (enforceBoundary — неподвижный корень) и scripts/procstop/self-test.sh (identity-учёт + cleanup со сверкой + секции 12/13/14); обёртка и прочие production-файлы не тронуты; CONTEXT/ROADMAP/STATE/plans/machinefindings/CODE-REVIEW не правились.",
+    "Пробы и self-tests — только собственные конечноживущие C-фикстуры в approved scratch (/var/folders/.../T/kilo/cr04wr06-*, native-selftest.*, battery.*, swift-test*); сигналы — только точным PID собственных фикстур; реальные приложения/процессы/контейнеры не затронуты; платные API не вызывались.",
+    "Автор не принимает собственную работу: требуется независимый Sol-review раунда 4. При сохранении замечаний — возврат с фактическим FAIL."
+  ]
+}

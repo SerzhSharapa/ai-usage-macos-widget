@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000000000000000000000D /* AiUsageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000009 /* AiUsageApp.swift */; };
+		AA0000000000000000000026 /* ProviderAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000025 /* ProviderAccess.swift */; };
+		AA000000000000000000000E /* TestWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000A /* TestWidget.swift */; };
+		AA000000000000000000000F /* UsageCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000001A /* UsageCore */; };
+		AA0000000000000000000010 /* UsageCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000000000000000000001B /* UsageCore */; };
+		AA0000000000000000000011 /* AiUsageWidget.appex in PlugIns */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000B /* AiUsageWidget.appex */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA0000000000000000000018 /* PBXContainerItemProxy */ = {isa = PBXContainerItemProxy; containerPortal = AA0000000000000000000001 /* Project object */; proxyType = 1; remoteGlobalIDString = AA0000000000000000000003; remoteInfo = AiUsageWidget; };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA0000000000000000000016 /* Embed PlugIns */ = {isa = PBXCopyFilesBuildPhase; buildActionMask = 2147483647; dstPath = ""; dstSubfolderSpec = 13; files = (
+				AA0000000000000000000011 /* AiUsageWidget.appex in PlugIns */,
+			); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA0000000000000000000009 /* AiUsageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiUsageApp.swift; sourceTree = "<group>"; };
+		AA0000000000000000000025 /* ProviderAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderAccess.swift; sourceTree = "<group>"; };
+		AA000000000000000000000A /* TestWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWidget.swift; sourceTree = "<group>"; };
+		AA000000000000000000000B /* AiUsageWidget.appex */ = {isa = PBXFileReference; explicitFileType = wrapper.app-extension; includeInIndex = 0; path = AiUsageWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000000000000000000000C /* AI Usage Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI Usage Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA0000000000000000000014 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (
+				AA000000000000000000000F /* UsageCore in Frameworks */,
+			); runOnlyForDeploymentPostprocessing = 0; };
+		AA0000000000000000000015 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (
+				AA0000000000000000000010 /* UsageCore in Frameworks */,
+			); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA0000000000000000000004 = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000005 /* AiUsage */,
+				AA0000000000000000000006 /* Widget */,
+				AA0000000000000000000008 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000005 /* AiUsage */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000009 /* AiUsageApp.swift */,
+				AA0000000000000000000025 /* ProviderAccess.swift */,
+			);
+			path = AiUsage;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000006 /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000000A /* TestWidget.swift */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000008 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000000C /* AI Usage Widget.app */,
+				AA000000000000000000000B /* AiUsageWidget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		AA0000000000000000000019 /* UsageCore */ = {isa = XCLocalSwiftPackageReference; relativePath = Packages/UsageCore; };
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin PBXNativeTarget section */
+		AA0000000000000000000002 /* AiUsage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000000000000000000001F /* Build configuration list for PBXNativeTarget "AiUsage" */;
+			buildPhases = (
+				AA0000000000000000000012 /* Sources */,
+				AA0000000000000000000014 /* Frameworks */,
+				AA0000000000000000000016 /* Embed PlugIns */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA0000000000000000000017 /* PBXTargetDependency */,
+			);
+			name = AiUsage;
+			packageProductDependencies = (
+				AA000000000000000000001A /* UsageCore */,
+			);
+			productName = "AI Usage Widget";
+			productReference = AA000000000000000000000C /* AI Usage Widget.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA0000000000000000000003 /* AiUsageWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000022 /* Build configuration list for PBXNativeTarget "AiUsageWidget" */;
+			buildPhases = (
+				AA0000000000000000000013 /* Sources */,
+				AA0000000000000000000015 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AiUsageWidget;
+			packageProductDependencies = (
+				AA000000000000000000001B /* UsageCore */,
+			);
+			productName = AiUsageWidget;
+			productReference = AA000000000000000000000B /* AiUsageWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+			};
+			buildConfigurationList = AA000000000000000000001C /* Build configuration list for PBXProject "AiUsage" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA0000000000000000000004;
+			packageReferences = (
+				AA0000000000000000000019 /* UsageCore */,
+			);
+			productRefGroup = AA0000000000000000000008 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA0000000000000000000002 /* AiUsage */,
+				AA0000000000000000000003 /* AiUsageWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA0000000000000000000012 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000000D /* AiUsageApp.swift in Sources */,
+				AA0000000000000000000026 /* ProviderAccess.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA0000000000000000000013 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000000E /* TestWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA0000000000000000000017 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = AA0000000000000000000003 /* AiUsageWidget */; targetProxy = AA0000000000000000000018 /* PBXContainerItemProxy */; };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AA000000000000000000001D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA000000000000000000001E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AA0000000000000000000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AiUsage/AiUsage.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HXCPAD9C53;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AiUsage/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.serzhsharapa.aiusage;
+				PRODUCT_NAME = "AI Usage Widget";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AiUsage/AiUsage.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HXCPAD9C53;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AiUsage/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.serzhsharapa.aiusage;
+				PRODUCT_NAME = "AI Usage Widget";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AA0000000000000000000023 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widget/AiUsageWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HXCPAD9C53;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.serzhsharapa.aiusage.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000024 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widget/AiUsageWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HXCPAD9C53;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.serzhsharapa.aiusage.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000000000000000000001C /* Build configuration list for PBXProject "AiUsage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000001D /* Debug */,
+				AA000000000000000000001E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000000000000000000001F /* Build configuration list for PBXNativeTarget "AiUsage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000020 /* Debug */,
+				AA0000000000000000000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000022 /* Build configuration list for PBXNativeTarget "AiUsageWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000023 /* Debug */,
+				AA0000000000000000000024 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA000000000000000000001A /* UsageCore */ = {isa = XCSwiftPackageProductDependency; package = AA0000000000000000000019 /* UsageCore */; productName = UsageCore; };
+		AA000000000000000000001B /* UsageCore */ = {isa = XCSwiftPackageProductDependency; package = AA0000000000000000000019 /* UsageCore */; productName = UsageCore; };
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AA0000000000000000000001 /* Project object */;
+}

@@ -1,0 +1,47 @@
+{
+  "phase": "01",
+  "plan": "01-04",
+  "status": "blocked",
+  "type": "human-verify",
+  "gate": "blocking-human",
+  "observed_at": "2026-10-18T10:32:00Z",
+  "completed_tasks": [
+    {"task": 1, "result": "Xcode и Apple Development готовы; официальный WWDR G3 добавлен по явному согласию владельца, без изменения настроек доверия."},
+    {"task": 2, "result": "Release собран, установлен, запущен и повторно переустановлен; installed verify PASS, подписи обоих продуктов, группа и регистрация appex проверены."}
+  ],
+  "resume_task": 3,
+  "resume_task_name": "Визуальная приёмка установленного виджета и состояний контрольной записи вне Xcode",
+  "evidence": {
+    "developer_directory": "/Applications/Xcode.app/Contents/Developer",
+    "xcode_version": "27.0 (27A266a)",
+    "xcodebuild_version_exit": 0,
+    "xcode_installed": true,
+    "valid_codesigning_identity_count": 1,
+    "expected_team_config_exists": true,
+    "team_id_source": "OU собственного сертификата Apple Development; код в CN не является Team ID",
+    "team_id": "HXCPAD9C53",
+    "installed_path": "/Users/serzhsharapa/Applications/AI Usage Widget.app",
+    "installed_verify": "PASS",
+    "repeat_install": "PASS",
+    "widget_registration": "active, exact installed appex path",
+    "signed_group": "HXCPAD9C53.group.aiusage",
+    "embedded_profiles": "absent in both products",
+    "app_certificate_not_after": "2027-10-18T10:04:55Z",
+    "appex_certificate_not_after": "2027-10-18T10:04:55Z",
+    "latest_build_log": "/Users/serzhsharapa/Library/Logs/ai-usage/build-20261018-133136.log"
+  },
+  "instruction_path": "docs/phase-01-setup.ru.md",
+  "required_owner_actions": [
+    "В панели приложения нажать Записать тест.",
+    "Добавить небольшой AI Usage Widget - Тест в Центр уведомлений и сравнить номер и время с панелью.",
+    "Завершить остальные ручные проверки 01-04-T3; ни совпадение записи, ни состояния GUI пока не подтверждены владельцем."
+  ],
+  "resume_condition": "Владелец сообщает фактический результат визуальной проверки 01-04-T3; автоматическое одобрение запрещено.",
+  "next_command": "/gsd-execute-phase 1",
+  "blocked_successors": ["01-05"],
+  "phase_complete": false,
+  "requirement_complete": false,
+  "summary_created": false,
+  "auto_approved": false,
+  "committed": false
+}

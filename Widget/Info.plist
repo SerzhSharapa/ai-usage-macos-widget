@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Фаза 1, план 01-02: Info.plist widget extension (appex).
+	     Файл подключён как INFOPLIST_FILE = Widget/Info.plist в project.pbxproj
+	     (план 01-01, GENERATE_INFOPLIST_FILE = NO).
+	     Отображаемое имя и описание виджета задаёт код (D-11), не plist. -->
+	<key>CFBundleName</key>
+	<string>AiUsageWidget</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<!-- Appex-бандл: пакетный тип расширения. -->
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>21</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>15.0</string>
+	<!-- Точка расширения WidgetKit; NSExtensionPrincipalClass виджету не нужен —
+	     вход @main WidgetBundle в Widget/TestWidget.swift (план 01-01). -->
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.widgetkit-extension</string>
+	</dict>
+	<!-- Тот же единый литерал группы, что у app (Pitfall 6, T-01-01):
+	     чтение appGroupID(from:) в Widget/TestWidget.swift. -->
+	<key>AppGroupID</key>
+	<string>$(DEVELOPMENT_TEAM).group.aiusage</string>
+</dict>
+</plist>
